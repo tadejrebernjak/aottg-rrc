@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react";
 import clsx from "clsx";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useState } from "react";
 
 type Row = {
   split: number | null;
@@ -10,79 +8,89 @@ type Row = {
 };
 
 export default function RunAnalyzer() {
-  const [open, setOpen] = useState<boolean>(true);
-  const [values, setValues] = useState<(number | null)[]>([
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-  ]);
-  const [rows, setRows] = useState<Row[]>([
-    { split: null, splitPace: null, totalPace: null },
-    { split: null, splitPace: null, totalPace: null },
-    { split: null, splitPace: null, totalPace: null },
-    { split: null, splitPace: null, totalPace: null },
-    { split: null, splitPace: null, totalPace: null },
-    { split: null, splitPace: null, totalPace: null },
-  ]);
+  const [kills, setKills] = useState<(number | null)[]>(Array(6).fill(null));
+  const [damage, setDamage] = useState<(number | null)[]>(Array(6).fill(null));
+  const [killResults, setKillResults] = useState<Row[]>(
+    new Array(6)
+      .fill(null)
+      .map(() => ({ split: null, splitPace: null, totalPace: null }))
+  );
+  const [damageResults, setDamageResults] = useState<Row[]>(
+    new Array(6)
+      .fill(null)
+      .map(() => ({ split: null, splitPace: null, totalPace: null }))
+  );
+  const [average, setAverage] = useState<number | null>(null);
 
   const tableRows = ["100s", "200s", "300s", "400s", "500s", "600s"];
 
   useEffect(() => {
-    const newRows = [...rows];
-    newRows.forEach((row, i) => {
+    setKillResults(calculateResults(kills, "kills"));
+    // eslint-disable-next-line
+  }, [kills]);
+
+  useEffect(() => {
+    setDamageResults(calculateResults(damage, "damage"));
+    // eslint-disable-next-line
+  }, [damage]);
+
+  function calculateResults(
+    values: (number | null)[],
+    target: "kills" | "damage"
+  ): Row[] {
+    const newResults: Row[] =
+      target === "kills" ? [...killResults] : [...damageResults];
+
+    newResults.forEach((row, i) => {
       row.split = i === 0 ? values[i] || 0 : values[i]! - values[i - 1]!;
       row.splitPace = row.split! * 6;
       row.totalPace =
         i === 0 ? values[i]! * 6 : Math.round(values[i]! * (6 / (i + 1)));
     });
 
-    setRows(newRows);
-  }, [values]);
+    checkAverage();
+    return newResults;
+  }
+
+  function checkAverage() {
+    if (kills[5] !== null && damage[5] !== null) {
+      setAverage(Math.round(((damage[5] / kills[5]) * 100) / 100));
+    } else {
+      setAverage(null);
+    }
+  }
 
   function handleInputChange(
     e: React.ChangeEvent<HTMLInputElement>,
-    index: number
+    index: number,
+    values: "kills" | "damage"
   ) {
     let newValue: number | null = parseInt(e.target.value);
     newValue = isNaN(newValue) ? null : newValue;
 
-    const newValues = [...values];
-    newValues[index] = newValue;
-    setValues(newValues);
+    if (values === "kills") {
+      const newValues = [...kills];
+      newValues[index] = newValue;
+      setKills(newValues);
+    } else {
+      const newValues = [...damage];
+      newValues[index] = newValue;
+      setDamage(newValues);
+    }
   }
 
   return (
     <div className="bg-slate-900 rounded-md border-2 border-indigo-800">
-      <div
-        className="bg-indigo-800 rounded-t-sm cursor-pointer"
-        onMouseUp={() => setOpen(!open)}
-      >
-        <h2 className="text-4xl text-gray-200 text-center p-5 relative group">
-          Run Analyzer
-          <FontAwesomeIcon
-            icon={faCaretDown}
-            className={clsx(
-              "absolute right-5 group-hover:text-gray-300 transition-all duration-500",
-              open && "rotate-180"
-            )}
-          />
-        </h2>
+      <div className="bg-indigo-800 rounded-t-sm">
+        <h2 className="text-4xl text-gray-200 text-center p-5">Run Analyzer</h2>
       </div>
-      <div
-        className={clsx(
-          "transition-all duration-500 overflow-hidden",
-          open && "max-h-[1000px] p-5",
-          !open && "max-h-0 p-0"
-        )}
-      >
-        <table className="w-full text-center">
+      <div className="transition-all duration-500 p-5 overflow-auto">
+        <table className="w-full text-center overflow-x-scroll">
           <thead>
             <tr className="text-2xl [&>th]:p-5">
               <th>Time</th>
-              <th>Kills/Damage</th>
+              <th>Kills</th>
+              <th>Damage</th>
               <th>Split</th>
               <th>Split Pace</th>
               <th>Total Pace</th>
@@ -97,18 +105,44 @@ export default function RunAnalyzer() {
                     <input
                       className="text-center"
                       type="number"
-                      value={values[index]?.toString() || ""}
-                      onChange={(e) => handleInputChange(e, index)}
+                      value={kills[index]?.toString() || ""}
+                      onChange={(e) => handleInputChange(e, index, "kills")}
                     />
                   </td>
-                  <td>{rows[index].split?.toString() || ""}</td>
-                  <td>{rows[index].splitPace?.toString() || ""}</td>
-                  <td>{rows[index].totalPace?.toString() || ""}</td>
+                  <td className="w-[150px]">
+                    <input
+                      className="text-center"
+                      type="number"
+                      value={damage[index]?.toString() || ""}
+                      onChange={(e) => handleInputChange(e, index, "damage")}
+                    />
+                  </td>
+                  <td>
+                    {killResults[index].split?.toString() || ""} /{" "}
+                    {damageResults[index].split?.toString() || ""}
+                  </td>
+                  <td>
+                    {killResults[index].splitPace?.toString() || ""} /{" "}
+                    {damageResults[index].splitPace?.toString() || ""}
+                  </td>
+                  <td>
+                    {killResults[index].totalPace?.toString() || ""} /{" "}
+                    {damageResults[index].totalPace?.toString() || ""}
+                  </td>
                 </tr>
               );
             })}
           </tbody>
         </table>
+        <p
+          className={clsx(
+            average !== null && "block",
+            average === null && "hidden",
+            "text-center text-2xl mt-5"
+          )}
+        >
+          Damage Average: {average}
+        </p>
       </div>
     </div>
   );

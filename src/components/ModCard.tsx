@@ -18,7 +18,7 @@ export default function ModCard({
       className={clsx(
         "flex flex-col gap-5 p-5 md:p-10 rounded-lg",
         !isRRC && "bg-slate-900",
-        isRRC && "bg-slate-800 col-span-2"
+        isRRC && "bg-slate-800 md:col-span-2"
       )}
     >
       <div className="flex items-center gap-5">

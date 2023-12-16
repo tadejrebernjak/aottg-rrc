@@ -56,7 +56,7 @@ export default function Download() {
       <h1 className="text-5xl text-rrc-red-light mb-10 text-center">
         Download
       </h1>
-      <section className="flex flex-col md:grid grid-cols-2 xl:grid-cols-3 justify-center gap-10">
+      <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 justify-center gap-10">
         {mods.map((mod) => {
           return (
             <ModCard
