@@ -1,13 +1,61 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "BigNoodleTitling";
+  src: url("./assets/fonts/big_noodle_titling.ttf");
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@font-face {
+  font-family: "BigNoodleTitlingOblique";
+  src: url("./assets/fonts/big_noodle_titling_oblique.ttf");
+}
+
+@font-face {
+  font-family: "RobotoCondensed";
+  src: url("./assets/fonts/RobotoCondensed.ttf");
+}
+
+@font-face {
+  font-family: "RobotoCondensedItalic";
+  src: url("./assets/fonts/RobotoCondensed-Italic.ttf");
+}
+
+:root {
+  --foreground-rgb: 240, 240, 240;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: url("./assets/images/background.jpg") no-repeat center center
+    fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+nav,
+h1,
+h2,
+th {
+  font-family: "BigNoodleTitlingOblique";
+}
+
+h3,
+h4,
+h5,
+h6,
+button {
+  font-family: "BigNoodleTitling";
+}
+
+main a {
+  color: #f93c5d;
+}
+
+main a:hover {
+  text-decoration: underline;
+  color: #fa012d;
 }
