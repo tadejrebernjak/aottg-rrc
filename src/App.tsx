@@ -1,4 +1,5 @@
 import { RouterProvider, createBrowserRouter, Outlet } from "react-router-dom";
+import { useState } from "react";
 
 import Home from "./routes/Home";
 import Leaderboard from "./routes/Leaderboard";
@@ -8,7 +9,6 @@ import Download from "./routes/Download";
 import Setup from "./routes/Setup";
 import Tools from "./routes/Tools";
 import Community from "./routes/Community";
-import { useState } from "react";
 import Sidebar from "./components/Sidebar";
 
 const router = createBrowserRouter([

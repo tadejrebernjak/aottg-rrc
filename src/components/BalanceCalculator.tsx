@@ -10,6 +10,13 @@ type BalanceForm = {
   totalDamage: number | null;
 };
 
+const nameMap = new Map<keyof BalanceForm, string>([
+  ["kills", "Kills"],
+  ["deaths", "Deaths"],
+  ["highestDamage", "Highest Damage Hit"],
+  ["totalDamage", "Total Damage"],
+]);
+
 export default function BalanceCalculator() {
   const [form, setForm] = useState<BalanceForm>({
     kills: null,
@@ -20,7 +27,7 @@ export default function BalanceCalculator() {
   const [score, setScore] = useState<number | null>(null);
   const [open, setOpen] = useState<boolean>(false);
 
-  function updateBalance(e: React.ChangeEvent<HTMLInputElement>) {
+  function updateScore(e: React.ChangeEvent<HTMLInputElement>) {
     const newValue = parseInt(e.target.value);
     setForm({
       ...form,
@@ -46,6 +53,10 @@ export default function BalanceCalculator() {
     setScore(balance);
   }, [form]);
 
+  const balanceFormProperties: (keyof BalanceForm)[] = Object.keys(
+    form as BalanceForm
+  ) as (keyof BalanceForm)[];
+
   return (
     <div className="bg-slate-900 rounded-md border-2 border-rrc-red-dark">
       <div
@@ -70,42 +81,20 @@ export default function BalanceCalculator() {
           !open && "max-h-0 p-0"
         )}
       >
-        <div>
-          <label>Kills</label>
-          <input
-            type="number"
-            name="kills"
-            value={form.kills?.toString() || ""}
-            onChange={(e) => updateBalance(e)}
-          />
-        </div>
-        <div>
-          <label>Deaths</label>
-          <input
-            type="number"
-            name="deaths"
-            value={form.deaths?.toString() || ""}
-            onChange={(e) => updateBalance(e)}
-          />
-        </div>
-        <div>
-          <label>Highest Damage</label>
-          <input
-            type="number"
-            name="highestDamage"
-            value={form.highestDamage?.toString() || ""}
-            onChange={(e) => updateBalance(e)}
-          />
-        </div>
-        <div>
-          <label>Total Damage</label>
-          <input
-            type="number"
-            name="totalDamage"
-            value={form.totalDamage?.toString() || ""}
-            onChange={(e) => updateBalance(e)}
-          />
-        </div>
+        {balanceFormProperties.map((property) => {
+          return (
+            <div key={property}>
+              <label htmlFor={property}>{nameMap.get(property)}</label>
+              <input
+                id={property}
+                type="number"
+                name={property}
+                value={form[property]?.toString() || ""}
+                onChange={(e) => updateScore(e)}
+              />
+            </div>
+          );
+        })}
         <h3 className="text-center text-4xl font-lithosproblack break-words text-rrc-damage text-shadow">
           {score}
         </h3>

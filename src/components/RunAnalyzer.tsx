@@ -105,6 +105,7 @@ export default function RunAnalyzer() {
                     <input
                       className="text-center"
                       type="number"
+                      name={"kills-" + time}
                       value={kills[index]?.toString() || ""}
                       onChange={(e) => handleInputChange(e, index, "kills")}
                     />
@@ -113,6 +114,7 @@ export default function RunAnalyzer() {
                     <input
                       className="text-center"
                       type="number"
+                      name={"kills-" + time}
                       value={damage[index]?.toString() || ""}
                       onChange={(e) => handleInputChange(e, index, "damage")}
                     />

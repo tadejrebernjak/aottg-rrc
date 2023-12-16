@@ -2,9 +2,10 @@ import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
+import { saveAs } from "file-saver";
 
 type HDMForm = {
-  highestDamage: number | null;
+  highestHit: number | null;
   abyJumper: number | null;
   spiral: number | null;
   traditionalCut: number | null;
@@ -16,9 +17,22 @@ type HDMForm = {
   airEquator: number | null;
 };
 
+const nameMap = new Map<keyof HDMForm, string>([
+  ["highestHit", "Highest Damage Hit"],
+  ["abyJumper", "Highest Damage on Aberrant or Jumper"],
+  ["spiral", "Spiral"],
+  ["traditionalCut", "Traditional Cut"],
+  ["correctionalCut", "Correctional Cut"],
+  ["dGyro", "D-Gyro"],
+  ["rSpin", "R-Spin"],
+  ["tradbyFlyby", "Trad-by or Fly-by"],
+  ["hydraVector", "Hydra or Vector"],
+  ["airEquator", "Air Equator"],
+]);
+
 export default function HDMCalculator() {
   const [form, setForm] = useState<HDMForm>({
-    highestDamage: null,
+    highestHit: null,
     abyJumper: null,
     spiral: null,
     traditionalCut: null,
@@ -32,7 +46,7 @@ export default function HDMCalculator() {
   const [score, setScore] = useState<number | null>(null);
   const [open, setOpen] = useState<boolean>(false);
 
-  function updateBalance(e: React.ChangeEvent<HTMLInputElement>) {
+  function updateScore(e: React.ChangeEvent<HTMLInputElement>) {
     const newValue = parseInt(e.target.value);
     setForm({
       ...form,
@@ -56,6 +70,45 @@ export default function HDMCalculator() {
     setScore(hdm);
   }, [form]);
 
+  function handleExport() {
+    const blob = new Blob([JSON.stringify(form, null, "\t")], {
+      type: "application/json",
+    });
+    saveAs(blob, "HDM.json");
+  }
+
+  function readFile(file: File) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => resolve(e.target!.result);
+      reader.onerror = (err) => reject(err);
+
+      reader.readAsText(file);
+    });
+  }
+
+  async function handleImport(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.currentTarget.files === null || e.currentTarget.files === undefined)
+      return;
+    const file = e.currentTarget.files[0];
+    if (file === undefined) return;
+
+    try {
+      const data = await readFile(file);
+      const object = JSON.parse(data as string);
+
+      if (Object.keys(object).every((key) => form.hasOwnProperty(key))) {
+        setForm(object);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  const hdmFormProperties: (keyof HDMForm)[] = Object.keys(
+    form as HDMForm
+  ) as (keyof HDMForm)[];
+
   return (
     <div className="bg-slate-900 rounded-md border-2 border-rrc-blue-lighter">
       <div
@@ -76,104 +129,49 @@ export default function HDMCalculator() {
       <div
         className={clsx(
           "flex flex-col gap-5 transition-all duration-500 overflow-hidden",
-          open && "max-h-[1000px] p-5",
+          open && "max-h-[1100px] p-5",
           !open && "max-h-0 p-0"
         )}
       >
-        <div>
-          <label>Highest Damage Hit</label>
-          <input
-            type="number"
-            name="highestDamage"
-            value={form.highestDamage?.toString() || ""}
-            onChange={(e) => updateBalance(e)}
-          />
-        </div>
-        <div>
-          <label>Highest Damage on Aberrant or Jumper</label>
-          <input
-            type="number"
-            name="abyJumper"
-            value={form.abyJumper?.toString() || ""}
-            onChange={(e) => updateBalance(e)}
-          />
-        </div>
-        <div>
-          <label>Spiral (Single-Reel)</label>
-          <input
-            type="number"
-            name="spiral"
-            value={form.spiral?.toString() || ""}
-            onChange={(e) => updateBalance(e)}
-          />
-        </div>
-        <div>
-          <label>Traditional Cut</label>
-          <input
-            type="number"
-            name="traditionalCut"
-            value={form.traditionalCut?.toString() || ""}
-            onChange={(e) => updateBalance(e)}
-          />
-        </div>
-        <div>
-          <label>Correctional Cut</label>
-          <input
-            type="number"
-            name="correctionalCut"
-            value={form.correctionalCut?.toString() || ""}
-            onChange={(e) => updateBalance(e)}
-          />
-        </div>
-        <div>
-          <label>D-Gyro</label>
-          <input
-            type="number"
-            name="dGyro"
-            value={form.dGyro?.toString() || ""}
-            onChange={(e) => updateBalance(e)}
-          />
-        </div>
-        <div>
-          <label>R-Spin</label>
-          <input
-            type="number"
-            name="rSpin"
-            value={form.rSpin?.toString() || ""}
-            onChange={(e) => updateBalance(e)}
-          />
-        </div>
-        <div>
-          <label>Trad-By or Fly-By</label>
-          <input
-            type="number"
-            name="tradbyFlyby"
-            value={form.tradbyFlyby?.toString() || ""}
-            onChange={(e) => updateBalance(e)}
-          />
-        </div>
-        <div>
-          <label>Hydra or Vector</label>
-          <input
-            type="number"
-            name="hydraVector"
-            value={form.hydraVector?.toString() || ""}
-            onChange={(e) => updateBalance(e)}
-          />
-        </div>
-        <div>
-          <label>Air Equator</label>
-          <input
-            type="number"
-            name="airEquator"
-            value={form.airEquator?.toString() || ""}
-            onChange={(e) => updateBalance(e)}
-          />
-        </div>
-
+        {hdmFormProperties.map((property) => {
+          return (
+            <div key={property}>
+              <label htmlFor={property}>{nameMap.get(property)}</label>
+              <input
+                id={property}
+                type="number"
+                name={property}
+                value={form[property]?.toString() || ""}
+                onChange={(e) => updateScore(e)}
+              />
+            </div>
+          );
+        })}
         <h3 className="text-center text-4xl font-lithosproblack break-words text-rrc-damage text-shadow">
           {score}
         </h3>
+        <div className="flex flex-row justify-around gap-5 flex-wrap">
+          <button
+            className="p-3 bg-rrc-blue-light text-white text-2xl rounded-lg hover:bg-rrc-blue-lighter transition-colors"
+            onClick={handleExport}
+          >
+            Export
+          </button>
+
+          <label
+            htmlFor="importFile"
+            className="text-white text-2xl p-3 cursor-pointer font-bignoodle bg-rrc-blue-light rounded-lg hover:bg-rrc-blue-lighter transition-colors"
+          >
+            Import
+          </label>
+          <input
+            type="file"
+            id="importFile"
+            className="hidden"
+            onChange={(e) => handleImport(e)}
+            accept="application/JSON"
+          />
+        </div>
       </div>
     </div>
   );
