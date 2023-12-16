@@ -1,4 +1,7 @@
 /** @type {import('tailwindcss').Config} */
+
+import plugin from "tailwindcss";
+
 module.exports = {
   content: [
     "./src/routes/**/*.{js,ts,jsx,tsx,mdx}",
@@ -25,8 +28,9 @@ module.exports = {
           red: {
             DEFAULT: "#fa012d",
             light: "#f93c5d",
-            dark: "#610819",
-            darker: "#33040d",
+            dark: "#cf1334",
+            darker: "#610819",
+            darkest: "#33040d",
           },
           bronze: "#9b643c",
           silver: "#949494",
@@ -37,6 +41,7 @@ module.exports = {
           grandmaster: "#fff8d2",
           legendary: "#fc8c24",
           top5: "#29cfff",
+          damage: "#fffc31",
         },
       },
       fontFamily: {
@@ -44,10 +49,30 @@ module.exports = {
         bignoodleoblique: ["BigNoodleTitlingOblique"],
         robotocondensed: ["RobotoCondensed"],
         robotocondenseditalic: ["RobotoCondensedItalic"],
+        lithosproblack: ["LithosProBlack"],
+      },
+      textShadow: {
+        sm: "0 1px 2px var(--tw-shadow-color)",
+        DEFAULT: "0 2px 4px var(--tw-shadow-color)",
+        lg: "0 8px 16px var(--tw-shadow-color)",
+      },
+      transitionProperty: {
+        "max-height": "max-height",
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(function ({ matchUtilities, theme }) {
+      matchUtilities(
+        {
+          "text-shadow": (value) => ({
+            textShadow: value,
+          }),
+        },
+        { values: theme("textShadow") }
+      );
+    }),
+  ],
   safelist: [
     {
       pattern:

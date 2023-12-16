@@ -22,12 +22,12 @@
   src: url("./assets/fonts/RobotoCondensed-Italic.ttf");
 }
 
-:root {
-  --foreground-rgb: 240, 240, 240;
+@font-face {
+  font-family: "LithosProBlack";
+  src: url("./assets/fonts/LithosPro-Black.otf");
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
   background: url("./assets/images/background.jpg") no-repeat center center
     fixed;
   -webkit-background-size: cover;
@@ -58,4 +58,22 @@ main a {
 main a:hover {
   text-decoration: underline;
   color: #fa012d;
+}
+
+input {
+  @apply bg-rrc-blue-darkest text-lg py-1 px-2 w-full outline-none border border-slate-800 focus:border-rrc-blue-light transition-colors;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+label {
+  @apply text-lg;
+}
+
+.text-shadow {
+  text-shadow: 0.125rem 0.125rem #e32518;
 }

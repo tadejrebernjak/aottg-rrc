@@ -33,7 +33,7 @@ export default function Home() {
         </div>
       </section>
 
-      <hr className="my-10" />
+      <hr className="my-10 border-slate-600" />
 
       <section className="flex flex-wrap gap-5 justify-between items-center flex-col-reverse lg:flex-row">
         <div className="w-full lg:w-1/2">

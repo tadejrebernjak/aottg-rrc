@@ -1,7 +1,8 @@
 import ModCard from "../components/ModCard";
 import logo from "../assets/images/logo.png";
+import { Mod } from "../Types";
 
-const mods = [
+const mods: Mod[] = [
   {
     fullName: "Ranked RiceCake Mod",
     acronym: "RRC",
@@ -28,18 +29,21 @@ const mods = [
   },
   {
     fullName: "Guardian Mod",
+    acronym: undefined,
     description: "idk lol",
     link: "https://www.mediafire.com/file/kb2u5jl8xyxbmgk/RRC_Launcher.rar/file",
     image: logo,
   },
   {
     fullName: "Anarchy Mod",
+    acronym: undefined,
     description: "anarchy",
     link: "https://www.mediafire.com/file/kb2u5jl8xyxbmgk/RRC_Launcher.rar/file",
     image: logo,
   },
   {
     fullName: "Expedition Mod",
+    acronym: undefined,
     description: "XD",
     link: "https://www.mediafire.com/file/kb2u5jl8xyxbmgk/RRC_Launcher.rar/file",
     image: logo,
@@ -56,6 +60,7 @@ export default function Download() {
         {mods.map((mod) => {
           return (
             <ModCard
+              key={mod.fullName}
               fullName={mod.fullName}
               acronym={mod.acronym || undefined}
               description={mod.description}
