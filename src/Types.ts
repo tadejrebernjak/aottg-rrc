@@ -7,7 +7,13 @@ export type LinkProps = {
 export type Mod = {
   fullName: string;
   acronym: string | undefined;
-  image: string;
-  link: string;
+  creators: string[];
+  image: string | undefined;
   description: string;
+  category: "green" | "orange";
+  links: {
+    download: string | undefined;
+    site: string | undefined;
+    discord: string | undefined;
+  };
 };
