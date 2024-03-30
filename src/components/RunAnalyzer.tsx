@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 type Row = {
   split: number | null;
@@ -24,16 +24,6 @@ export default function RunAnalyzer() {
 
   const tableRows = ["100s", "200s", "300s", "400s", "500s", "600s"];
 
-  useEffect(() => {
-    setKillResults(calculateResults(kills, "kills"));
-    // eslint-disable-next-line
-  }, [kills]);
-
-  useEffect(() => {
-    setDamageResults(calculateResults(damage, "damage"));
-    // eslint-disable-next-line
-  }, [damage]);
-
   function calculateResults(
     values: (number | null)[],
     target: "kills" | "damage"
@@ -48,11 +38,15 @@ export default function RunAnalyzer() {
         i === 0 ? values[i]! * 6 : Math.round(values[i]! * (6 / (i + 1)));
     });
 
-    checkAverage();
+    if (target === "kills") {
+      checkAverage(values, damage);
+    } else {
+      checkAverage(kills, values);
+    }
     return newResults;
   }
 
-  function checkAverage() {
+  function checkAverage(kills: (number | null)[], damage: (number | null)[]) {
     if (kills[5] !== null && damage[5] !== null) {
       setAverage(Math.round(((damage[5] / kills[5]) * 100) / 100));
     } else {
@@ -72,10 +66,12 @@ export default function RunAnalyzer() {
       const newValues = [...kills];
       newValues[index] = newValue;
       setKills(newValues);
+      setKillResults(calculateResults(newValues, "kills"));
     } else {
       const newValues = [...damage];
       newValues[index] = newValue;
       setDamage(newValues);
+      setDamageResults(calculateResults(newValues, "damage"));
     }
   }
 
@@ -127,7 +123,7 @@ export default function RunAnalyzer() {
                     {killResults[index].splitPace?.toString() || ""} /{" "}
                     {damageResults[index].splitPace?.toString() || ""}
                   </td>
-                  <td>
+                  <td className="font-bold">
                     {killResults[index].totalPace?.toString() || ""} /{" "}
                     {damageResults[index].totalPace?.toString() || ""}
                   </td>

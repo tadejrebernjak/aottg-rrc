@@ -59,7 +59,7 @@ const mods: Mod[] = [
     image: undefined,
     category: "green",
     links: {
-      download: "https://aottgfan.site/clients/aotanticheat/AoTAC.zip",
+      download: "https://www.mediafire.com/file/tqi8f0kkoi747v0",
       site: "http://aotanticheat.weebly.com/",
       discord: undefined,
     },
@@ -129,7 +129,7 @@ const mods: Mod[] = [
     image: prolonpo,
     category: "orange",
     links: {
-      download: "https://aottgfan.site/clients/guardian/ModLauncher.exe",
+      download: "https://youtu.be/Uhcy911b-x0?si=-b2qME4zo_HoFlmz&t=369",
       site: "https://aottgfan.site",
       discord: "https://discord.gg/JGzTdWm",
     },

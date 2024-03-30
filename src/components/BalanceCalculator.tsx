@@ -17,6 +17,8 @@ const nameMap = new Map<keyof BalanceForm, string>([
   ["totalDamage", "Total Damage"],
 ]);
 
+const keys: (keyof BalanceForm)[] = Array.from(nameMap.keys());
+
 export default function BalanceCalculator() {
   const [form, setForm] = useState<BalanceForm>({
     kills: null,
@@ -53,10 +55,6 @@ export default function BalanceCalculator() {
     setScore(balance);
   }, [form]);
 
-  const balanceFormProperties: (keyof BalanceForm)[] = Object.keys(
-    form as BalanceForm
-  ) as (keyof BalanceForm)[];
-
   return (
     <div className="bg-slate-900 rounded-md border-2 border-rrc-red-dark">
       <div
@@ -81,15 +79,15 @@ export default function BalanceCalculator() {
           !open && "max-h-0 p-0"
         )}
       >
-        {balanceFormProperties.map((property) => {
+        {keys.map((key) => {
           return (
-            <div key={property}>
-              <label htmlFor={property}>{nameMap.get(property)}</label>
+            <div key={key}>
+              <label htmlFor={key}>{nameMap.get(key)}</label>
               <input
-                id={property}
+                id={key}
                 type="number"
-                name={property}
-                value={form[property]?.toString() || ""}
+                name={key}
+                value={form[key]?.toString() || ""}
                 onChange={(e) => updateScore(e)}
               />
             </div>

@@ -10,19 +10,19 @@ type Props = {
   onToggleSidebar: () => void;
 };
 
+const linksLeft: LinkProps[] = [
+  { text: "Download", to: "/download" },
+  { text: "Setup", to: "/setup" },
+  { text: "Tools", to: "/tools" },
+];
+
+const linksRight: LinkProps[] = [
+  { text: "Community", to: "/community" },
+  { text: "Leaderboard", to: "/leaderboard" },
+  { text: "Home", to: "/" },
+];
+
 export default function Header({ onToggleSidebar }: Props) {
-  const linksLeft: LinkProps[] = [
-    { text: "Download", to: "/download" },
-    { text: "Setup", to: "/setup" },
-    { text: "Tools", to: "/tools" },
-  ];
-
-  const linksRight: LinkProps[] = [
-    { text: "Community", to: "/community" },
-    { text: "Leaderboard", to: "/leaderboard" },
-    { text: "Home", to: "/" },
-  ];
-
   return (
     <header className="h-[150px] px-10 flex justify-between items-center bg-rrc-blue flex-wrap flex-row gap-3 lg:gap-0 border-b-2 border-rrc-blue-light">
       <button

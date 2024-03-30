@@ -30,6 +30,8 @@ const nameMap = new Map<keyof HDMForm, string>([
   ["airEquator", "Air Equator"],
 ]);
 
+const keys: (keyof HDMForm)[] = Array.from(nameMap.keys());
+
 export default function HDMCalculator() {
   const [form, setForm] = useState<HDMForm>({
     highestHit: null,
@@ -105,10 +107,6 @@ export default function HDMCalculator() {
     }
   }
 
-  const hdmFormProperties: (keyof HDMForm)[] = Object.keys(
-    form as HDMForm
-  ) as (keyof HDMForm)[];
-
   return (
     <div className="bg-slate-900 rounded-md border-2 border-rrc-blue-lighter">
       <div
@@ -133,15 +131,15 @@ export default function HDMCalculator() {
           !open && "max-h-0 p-0"
         )}
       >
-        {hdmFormProperties.map((property) => {
+        {keys.map((key) => {
           return (
-            <div key={property}>
-              <label htmlFor={property}>{nameMap.get(property)}</label>
+            <div key={key}>
+              <label htmlFor={key}>{nameMap.get(key)}</label>
               <input
-                id={property}
+                id={key}
                 type="number"
-                name={property}
-                value={form[property]?.toString() || ""}
+                name={key}
+                value={form[key]?.toString() || ""}
                 onChange={(e) => updateScore(e)}
               />
             </div>

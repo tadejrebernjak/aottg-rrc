@@ -9,16 +9,16 @@ type Props = {
   onToggleSidebar: () => void;
 };
 
-export default function Sidebar({ sidebar, onToggleSidebar }: Props) {
-  const links: LinkProps[] = [
-    { text: "Home", to: "/" },
-    { text: "Leaderboard", to: "/leaderboard" },
-    { text: "Community", to: "/community" },
-    { text: "Download", to: "/download" },
-    { text: "Setup", to: "/setup" },
-    { text: "Tools", to: "/tools" },
-  ];
+const links: LinkProps[] = [
+  { text: "Home", to: "/" },
+  { text: "Leaderboard", to: "/leaderboard" },
+  { text: "Community", to: "/community" },
+  { text: "Download", to: "/download" },
+  { text: "Setup", to: "/setup" },
+  { text: "Tools", to: "/tools" },
+];
 
+export default function Sidebar({ sidebar, onToggleSidebar }: Props) {
   function handleClickLink() {
     if (sidebar) onToggleSidebar();
   }
